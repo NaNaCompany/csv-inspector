@@ -1,0 +1,59 @@
+{
+  "slug": "csv-inspector",
+  "url": "https://nanalab.kr/csv-inspector/",
+  "languages": [
+    "ko",
+    "en",
+    "es",
+    "zh",
+    "ja",
+    "de"
+  ],
+  "locales": {
+    "ko": {
+      "name": "CSV 인코딩 구조 점검",
+      "description": "CSV의 인코딩 후보·구분자·열 수·따옴표 문법을 점검하고 정규화 CSV와 오류 목록을 저장하세요.",
+      "image_alt": "CSV 인코딩 구조 점검"
+    },
+    "en": {
+      "name": "CSV Encoding Inspector",
+      "description": "Inspect encoding candidates, delimiters, column counts and quote syntax, then export normalized CSV and error reports.",
+      "image_alt": "CSV Encoding Inspector"
+    },
+    "es": {
+      "name": "Inspector de codificación CSV",
+      "description": "Revisa posibles codificaciones, separadores, columnas y comillas, y exporta el CSV normalizado y la lista de errores.",
+      "image_alt": "Inspector de codificación CSV"
+    },
+    "zh": {
+      "name": "CSV 编码结构检查",
+      "description": "检查 CSV 的候选编码、分隔符、列数与引号语法，并导出规范化 CSV 和错误清单。",
+      "image_alt": "CSV 编码结构检查"
+    },
+    "ja": {
+      "name": "CSV 文字コード・構造点検",
+      "description": "CSVの文字コード候補、区切り文字、列数、引用符の構文を確認し、正規化CSVとエラー一覧を保存できます。",
+      "image_alt": "CSV 文字コード・構造点検"
+    },
+    "de": {
+      "name": "CSV-Kodierung prüfen",
+      "description": "Prüfen Sie Kodierungskandidaten, Trennzeichen, Spaltenzahlen und Anführungszeichen und exportieren Sie normalisierte CSV-Dateien und Fehlerlisten.",
+      "image_alt": "CSV-Kodierung prüfen"
+    },
+    "fr": {
+      "name": "Inspection de fichiers CSV",
+      "description": "Vérifiez les encodages possibles, séparateurs, nombres de colonnes et guillemets, puis exportez le CSV normalisé et les erreurs.",
+      "image_alt": "Inspection de fichiers CSV"
+    },
+    "pt": {
+      "name": "Inspetor de codificação CSV",
+      "description": "Confira possíveis codificações, delimitadores, número de colunas e aspas e exporte o CSV normalizado e a lista de erros.",
+      "image_alt": "Inspetor de codificação CSV"
+    },
+    "ru": {
+      "name": "Проверка кодировки и структуры CSV",
+      "description": "Проверяйте варианты кодировки, разделители, число столбцов и кавычки, затем сохраняйте нормализованный CSV и список ошибок.",
+      "image_alt": "Проверка кодировки и структуры CSV"
+    }
+  }
+}

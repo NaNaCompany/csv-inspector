@@ -1,0 +1,78 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><title>CSV 编码结构检查 · NaNa Lab</title><link rel="stylesheet" href="style.css">
+<meta name="robots" content="index,follow">
+<meta name="description" content="检查 CSV 的候选编码、分隔符、列数与引号语法，并导出规范化 CSV 和错误清单。">
+<link rel="canonical" href="https://nanalab.kr/csv-inspector/zh/">
+<link rel="alternate" hreflang="ko" href="https://nanalab.kr/csv-inspector/">
+<link rel="alternate" hreflang="en" href="https://nanalab.kr/csv-inspector/en/">
+<link rel="alternate" hreflang="es" href="https://nanalab.kr/csv-inspector/es/">
+<link rel="alternate" hreflang="zh" href="https://nanalab.kr/csv-inspector/zh/">
+<link rel="alternate" hreflang="ja" href="https://nanalab.kr/csv-inspector/ja/">
+<link rel="alternate" hreflang="de" href="https://nanalab.kr/csv-inspector/de/">
+<link rel="alternate" hreflang="x-default" href="https://nanalab.kr/csv-inspector/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nanalab.kr/csv-inspector/zh/">
+<meta property="og:title" content="CSV 编码结构检查">
+<meta property="og:description" content="检查 CSV 的候选编码、分隔符、列数与引号语法，并导出规范化 CSV 和错误清单。">
+<meta property="og:image" content="https://nanalab.kr/csv-inspector/og/zh.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSV 编码结构检查">
+<meta name="twitter:description" content="检查 CSV 的候选编码、分隔符、列数与引号语法，并导出规范化 CSV 和错误清单。">
+<meta name="twitter:image" content="https://nanalab.kr/csv-inspector/og/zh.jpg">
+<link rel="stylesheet" href="public.css">
+
+<!-- NaNa publisher: AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9767176956440077"
+        crossorigin="anonymous"></script>
+<!-- /NaNa publisher: AdSense -->
+<!-- NaNa publisher: GTM -->
+<script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })
+            (window, document, 'script', 'dataLayer', 'GTM-NV2WWQXB');
+    </script>
+<!-- /NaNa publisher: GTM -->
+<!-- NaNa publisher: Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZYSF0173P"></script>
+<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-2ZYSF0173P');
+    </script>
+<!-- /NaNa publisher: Analytics -->
+</head><body>
+<!-- NaNa publisher: GTM fallback -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NV2WWQXB" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+<!-- /NaNa publisher: GTM fallback -->
+<main><header><a class="brand" href="./">LOCAL / DATA TOOLS</a><span class="badge" data-t="badge"></span><label><span data-t="language"></span> <select id="language" aria-label="语言"><option value="ko">한국어</option><option value="en">English</option><option value="es">Español</option><option value="zh">简体中文</option><option value="ja">日本語</option><option value="de">Deutsch</option></select></label></header><section class="hero"><p class="eyebrow">CSV INSPECTOR</p><h1 data-t="hero" style="white-space:pre-line"></h1><p data-t="intro"></p></section><section class="panel"><h2 data-t="inputTitle"></h2><div class="buttons"><label class="button primary"><span data-t="file"></span><input id="file" type="file" accept=".csv,.tsv,.txt,text/csv,text/plain"></label><button id="example" data-t="example"></button><button id="original" disabled data-t="original"></button><button id="clear" data-t="clear"></button></div><p class="footnote" data-t="limits"></p><label class="field"><span data-t="encoding"></span><select id="encoding"><option value="utf-8">UTF-8</option><option value="euc-kr">EUC-KR / CP949</option><option value="utf-16le">UTF-16 LE</option><option value="utf-16be">UTF-16 BE</option><option value="windows-1252">Windows-1252</option></select></label><p class="footnote" data-t="encodingHint"></p><details id="candidatePanel" hidden><summary data-t="candidates"></summary><p class="footnote" data-t="candidateHint"></p><div id="candidates"></div></details><label class="field"><span data-t="raw"></span><textarea id="raw" spellcheck="false" rows="10"></textarea></label><div class="options"><label class="field"><span data-t="delimiter"></span><select id="delimiter"><option value="auto" data-t="auto"></option><option value="," data-t="comma"></option><option value=";" data-t="semicolon"></option><option value="tab" data-t="tab"></option><option value="pipe" data-t="pipe"></option></select></label><label class="field"><span data-t="expected"></span><input id="expected" type="number" min="1" max="200" step="1" placeholder="—"></label><label><input id="safe" type="checkbox"><span data-t="safe"></span></label></div><button class="primary" id="inspect" data-t="inspect"></button><p id="status" role="status" aria-live="polite" data-t="initial"></p></section><section class="panel"><div class="result-top"><h2 data-t="result"></h2><div class="buttons"><button id="normalize" disabled data-t="normalize"></button><button id="errors" disabled data-t="errorsDownload"></button></div></div><div class="metrics"><div><strong id="records">0</strong><span data-t="records"></span></div><div><strong id="columns">0</strong><span data-t="columns"></span></div><div><strong id="issues">0</strong><span data-t="issues"></span></div></div><div id="issueList"></div><div class="table-wrap"><table id="table"><tbody><tr><td class="empty" data-t="noResult"></td></tr></tbody></table></div><p class="footnote" data-t="preview"></p></section><details><summary data-t="helpTitle"></summary><p data-t="help1"></p><p data-t="help2"></p><p><a href="https://www.rfc-editor.org/rfc/rfc4180" target="_blank" rel="noreferrer">RFC 4180 (CSV)</a> · <a href="https://encoding.spec.whatwg.org/" target="_blank" rel="noreferrer">WHATWG Encoding Standard</a></p></details><footer><span data-t="footer"></span><a href="https://nanalab.kr/apps/">More Apps ↗</a></footer></main><script type="module" src="app.js"></script>
+<!-- NaNa publisher: Cloudflare fallback -->
+<script>
+(function () {
+  function ensureBeacon() {
+    // Cloudflare may inject its beacon at the edge. Reuse that script when present.
+    if (document.querySelector('script[src*="static.cloudflareinsights.com/beacon.min.js"]')) return;
+    var beacon = document.createElement('script');
+    beacon.defer = true;
+    beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    beacon.setAttribute('data-cf-beacon', JSON.stringify({token: '9f3423bb0d034d91bbe1a12afeff2429'}));
+    document.head.appendChild(beacon);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensureBeacon, {once: true});
+  else ensureBeacon();
+})();
+</script>
+<!-- /NaNa publisher: Cloudflare fallback -->
+</body></html>

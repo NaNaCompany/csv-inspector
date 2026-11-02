@@ -1,4 +1,22 @@
 import pathlib,json
+
+# Shared book banner adapter; the campaign itself is maintained in src_cdn.
+def _shared_book_banner(value):
+    if isinstance(value, dict) and any(isinstance(key, str) and key.endswith('.html') for key in value):
+        return {key: _shared_book_banner(item) for key, item in value.items()}
+    if not isinstance(value, str) or not value.lstrip('\ufeff \r\n\t').lower().startswith(('<!doctype html', '<html')) or 'https://nanalab.kr/src_cdn/banner/astra.js' in value:
+        return value
+    snippet = '<!-- NaNa shared book banner --><script defer src="https://nanalab.kr/src_cdn/banner/astra.js"></script><!-- /NaNa shared book banner -->'
+    import re
+    opening = re.search(r'<head\b[^>]*>', value, re.I)
+    if opening:
+        return value[:opening.end()] + snippet + value[opening.end():]
+    for closing in ['</body>', '</html>']:
+        at = value.lower().find(closing)
+        if at >= 0:
+            return value[:at] + snippet + value[at:]
+    return value + snippet
+
 root=pathlib.Path(__file__).parent
 langs=['ko','en','es','zh','ja','de']
 data=r'''title|CSV 인코딩 구조 점검|CSV Encoding Inspector|Inspector de codificación CSV|CSV 编码结构检查|CSV 文字コード・構造点検|CSV-Kodierung prüfen
@@ -59,9 +77,9 @@ for line in data.splitlines():
  key,*values=line.split('|')
  if len(values)!=6:raise ValueError((key,len(values)))
  for l,v in zip(langs,values):catalog[l][key]=v.replace('\\n','\n').replace('\\u007c','|')
-(root/'dist/locales.js').write_text('import {catalog as base} from "./base-locales.js";\nconst extra='+json.dumps(catalog,ensure_ascii=False)+';\nexport const catalog=Object.fromEntries(Object.keys(extra).map(l=>[l,{...base[l],...extra[l]}]));',encoding='utf-8')
+(root/'dist/locales.js').write_text(_shared_book_banner(('import {catalog as base} from "./base-locales.js";\nconst extra='+json.dumps(catalog,ensure_ascii=False)+';\nexport const catalog=Object.fromEntries(Object.keys(extra).map(l=>[l,{...base[l],...extra[l]}]));')),encoding='utf-8')
 template='''<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><base href="{base}"><title>{title}</title><link rel="stylesheet" href="style.css"></head><body><main><header><a class="brand" href="./">LOCAL / DATA TOOLS</a><span class="badge" data-t="badge"></span><label><span data-t="language"></span> <select id="language" aria-label="{language}"><option value="ko">한국어</option><option value="en">English</option><option value="es">Español</option><option value="zh">简体中文</option><option value="ja">日本語</option><option value="de">Deutsch</option></select></label></header><section class="hero"><p class="eyebrow">CSV INSPECTOR</p><h1 data-t="hero" style="white-space:pre-line"></h1><p data-t="intro"></p></section><section class="panel"><h2 data-t="inputTitle"></h2><div class="buttons"><label class="button primary"><span data-t="file"></span><input id="file" type="file" accept=".csv,.tsv,.txt,text/csv,text/plain"></label><button id="example" data-t="example"></button><button id="original" disabled data-t="original"></button><button id="clear" data-t="clear"></button></div><p class="footnote" data-t="limits"></p><label class="field"><span data-t="encoding"></span><select id="encoding"><option value="utf-8">UTF-8</option><option value="euc-kr">EUC-KR / CP949</option><option value="utf-16le">UTF-16 LE</option><option value="utf-16be">UTF-16 BE</option><option value="windows-1252">Windows-1252</option></select></label><p class="footnote" data-t="encodingHint"></p><details id="candidatePanel" hidden><summary data-t="candidates"></summary><p class="footnote" data-t="candidateHint"></p><div id="candidates"></div></details><label class="field"><span data-t="raw"></span><textarea id="raw" spellcheck="false" rows="10"></textarea></label><div class="options"><label class="field"><span data-t="delimiter"></span><select id="delimiter"><option value="auto" data-t="auto"></option><option value="," data-t="comma"></option><option value=";" data-t="semicolon"></option><option value="tab" data-t="tab"></option><option value="pipe" data-t="pipe"></option></select></label><label class="field"><span data-t="expected"></span><input id="expected" type="number" min="1" max="200" step="1" placeholder="—"></label><label><input id="safe" type="checkbox"><span data-t="safe"></span></label></div><button class="primary" id="inspect" data-t="inspect"></button><p id="status" role="status" aria-live="polite" data-t="initial"></p></section><section class="panel"><div class="result-top"><h2 data-t="result"></h2><div class="buttons"><button id="normalize" disabled data-t="normalize"></button><button id="errors" disabled data-t="errorsDownload"></button></div></div><div class="metrics"><div><strong id="records">0</strong><span data-t="records"></span></div><div><strong id="columns">0</strong><span data-t="columns"></span></div><div><strong id="issues">0</strong><span data-t="issues"></span></div></div><div id="issueList"></div><div class="table-wrap"><table id="table"><tbody><tr><td class="empty" data-t="noResult"></td></tr></tbody></table></div><p class="footnote" data-t="preview"></p></section><details><summary data-t="helpTitle"></summary><p data-t="help1"></p><p data-t="help2"></p><p><a href="https://www.rfc-editor.org/rfc/rfc4180" target="_blank" rel="noreferrer">RFC 4180 (CSV)</a> · <a href="https://encoding.spec.whatwg.org/" target="_blank" rel="noreferrer">WHATWG Encoding Standard</a></p></details><footer><span data-t="footer"></span><a href="https://nanalab.kr/apps/">More Apps ↗</a></footer></main><script type="module" src="app.js"></script></body></html>'''
 for lang in langs:
  out=root/'dist'/('' if lang=='ko' else lang);out.mkdir(exist_ok=True)
  html=template.replace('{lang}',lang).replace('{base}','./' if lang=='ko' else '../').replace('{title}',catalog[lang]['title']).replace('{language}',{'ko':'언어','en':'Language','es':'Idioma','zh':'语言','ja':'言語','de':'Sprache'}[lang])
- (out/'index.html').write_text(html,encoding='utf-8')
+ (out/'index.html').write_text(_shared_book_banner((html)),encoding='utf-8')
